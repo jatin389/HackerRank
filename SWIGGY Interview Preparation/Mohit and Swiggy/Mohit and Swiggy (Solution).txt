@@ -1,0 +1,39 @@
+# https://www.hackerrank.com/challenges/mohit-and-swiggy/copy-from/100146615
+
+
+
+n,m=map(int,input().split())
+l=[]
+belongs={i:i for i in range(n+1)}			# to trace the path of node
+
+def find(n):
+    while(True):
+        if(n==belongs[n]):
+            return n
+        n=belongs[n]
+
+
+for i in range(m):
+    i,j,w=map(int,input().split())
+    l.append((w,i,j))
+
+l.sort(reverse=True)
+c=0
+weight=0
+
+while(c<n):
+    tmp=l.pop()
+   
+    x=find(tmp[1])
+    y=find(tmp[2])
+
+    if(x!=y):
+        c+=1
+        weight+=tmp[0]
+        if(x>y):
+            x,y=y,x
+        belongs[y]=x
+
+
+weight*=2
+print(weight)
