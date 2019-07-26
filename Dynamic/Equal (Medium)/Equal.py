@@ -1,4 +1,4 @@
-## https://www.hackerrank.com/challenges/equal/copy-from/116079870
+## https://www.hackerrank.com/challenges/equal/problem
 
 import math
 t=int(input())
