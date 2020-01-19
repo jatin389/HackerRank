@@ -1,0 +1,81 @@
+## https://www.hackerrank.com/challenges/magic-square-forming/problem?h_r=profile
+
+import math;
+
+# --- initialing variables ---
+magicSquareSize = 3
+border = magicSquareSize - 1        # array index starts from 0
+mid = magicSquareSize//2
+
+# Possible starting position of smallest value  
+initialPositions = {
+    'North' : (0,mid),              # (0,1)
+    'South' : (border,mid),         # (2,1)
+    'East'  : (mid,border),         # (1,2)
+    'West'  : (mid,0)               # (1,0)
+}     
+
+# to generate magic square: need to move diagonally
+directions = {
+    'NE' : (-1,1),               # North-East
+    'NW' : (-1,-1),              # North-West
+    'SE' : (1,1),                # South-East
+    'SW' : (1,-1)                # South-West
+}
+
+# total 8 magic squares are possible
+possibleMagicSquares = {
+    'North': ['NE','NW'],
+    'East' : ['NE','SE'],
+    'South': ['SE','SW'],
+    'West' : ['SW','NW']
+}
+initialValue = 1
+ 
+# --- reading input matrix ---
+magicSquare = []
+for row in range(magicSquareSize):                              
+    magicSquare.append(list(map(int,input().strip().split())))
+
+
+# --- generate magic square with given direction and inital position of smallest integer
+# --- return cost to transform given matrix into generated matrix
+def generateMagicSquare(initalPos, direction):     
+    i,j = initalPos[0], initalPos[1]
+    x,y = direction[0], direction[1]         
+
+    cost = 0;
+    tmp_magicSquare = [[0 for col in range(magicSquareSize)] for row in range(magicSquareSize)]
+    currentValue = initialValue    
+
+    count = 0
+    while(count < (magicSquareSize * magicSquareSize)):
+        tmp_magicSquare[i][j] = currentValue
+        cost += abs(magicSquare[i][j] - tmp_magicSquare[i][j])
+        count += 1
+        currentValue += 1
+
+        tmp_i = (i + (x)) % magicSquareSize
+        tmp_j = (j + (y)) % magicSquareSize
+
+        if(tmp_magicSquare[tmp_i][tmp_j] != 0):
+            if(initalPos in [initialPositions['North'],initialPositions['South']]):
+                tmp_i = (i - x) % magicSquareSize
+                tmp_j = j
+            else:
+                tmp_i = i
+                tmp_j = (j - y) % magicSquareSize
+        i = tmp_i
+        j = tmp_j
+    return cost;
+
+
+# loop through all possible magic squares
+minimumCost = math.inf;
+for initPos in possibleMagicSquares.keys():
+    initialPos = initialPositions[initPos]
+
+    for direction in possibleMagicSquares[initPos]:
+        minimumCost = min(minimumCost,generateMagicSquare(initialPos, directions[direction]))
+        
+print(minimumCost)
